@@ -1,4 +1,4 @@
-package com.github.Aleksandra92.courses;
+package com.github.Aleksandra92.courses.beans;
 
 /**
  * Author: Aleksandra Perova. Created on 30.03.2015.

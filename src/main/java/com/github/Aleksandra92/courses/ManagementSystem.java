@@ -1,5 +1,8 @@
 package com.github.Aleksandra92.courses;
 
+import com.github.Aleksandra92.courses.beans.Group;
+import com.github.Aleksandra92.courses.beans.Student;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +69,7 @@ public class ManagementSystem {
         s = new Student();
         s.setStudentId(1);
         s.setFirstName("Иван");
-        s.setPatronymic("Сергеевич");
+        s.setMiddleName("Сергеевич");
         s.setLastName("Степанов");
         s.setSex('М');
         c.set(1990, 3, 20);
@@ -78,7 +81,7 @@ public class ManagementSystem {
         s = new Student();
         s.setStudentId(2);
         s.setFirstName("Наталья");
-        s.setPatronymic("Андреевна");
+        s.setMiddleName("Андреевна");
         s.setLastName("Чичикова");
         s.setSex('Ж');
         c.set(1990, 6, 10);
@@ -91,7 +94,7 @@ public class ManagementSystem {
         s = new Student();
         s.setStudentId(3);
         s.setFirstName("Петр");
-        s.setPatronymic("Викторович");
+        s.setMiddleName("Викторович");
         s.setLastName("Сушкин");
         s.setSex('М');
         c.set(1991, 3, 12);
@@ -103,7 +106,7 @@ public class ManagementSystem {
         s = new Student();
         s.setStudentId(4);
         s.setFirstName("Вероника");
-        s.setPatronymic("Сергеевна");
+        s.setMiddleName("Сергеевна");
         s.setLastName("Ковалева");
         s.setSex('Ж');
         c.set(1991, 7, 19);
@@ -163,7 +166,7 @@ public class ManagementSystem {
             }
         }
         updStudent.setFirstName(student.getFirstName());
-        updStudent.setPatronymic(student.getPatronymic());
+        updStudent.setMiddleName(student.getMiddleName());
         updStudent.setLastName(student.getLastName());
         updStudent.setSex(student.getSex());
         updStudent.setDateOfBirth(student.getDateOfBirth());

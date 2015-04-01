@@ -1,4 +1,4 @@
-package com.github.Aleksandra92.courses;
+package com.github.Aleksandra92.courses.beans;
 
 import java.text.Collator;
 import java.text.DateFormat;
@@ -12,7 +12,7 @@ public class Student implements Comparable {
     private int studentId;
     private String lastName;
     private String firstName;
-    private String patronymic;
+    private String middleName;
     private Date dateOfBirth;
     private char sex;
     private int groupId;
@@ -42,12 +42,12 @@ public class Student implements Comparable {
         this.firstName = firstName;
     }
 
-    public String getPatronymic() {
-        return patronymic;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public Date getDateOfBirth() {
@@ -85,7 +85,7 @@ public class Student implements Comparable {
     @Override
     public String toString() {
         String COMMA_SEPARATOR = " ";
-        return "Студент: " + lastName + COMMA_SEPARATOR + firstName + COMMA_SEPARATOR + patronymic + "," +
+        return "Студент: " + lastName + COMMA_SEPARATOR + firstName + COMMA_SEPARATOR + middleName + "," +
                 DateFormat.getDateInstance(DateFormat.SHORT).format(dateOfBirth)
                 + ", Группа ИД=" + studentId + " Год: " + educationYear;
     }
