@@ -49,7 +49,7 @@ public class StudentApiInMemoryImplTest {
         Group group1 = new Group();
         group.setId(2L);
         int year1 = 2006;
-        int year2=2007;
+        int year2=2006;
         this.studentApi.moveStudentsToGroup(group, year1, group1, year2);
         Assert.assertEquals(0, this.studentApi.getStudentsFromGroup(group, year1).size());
     }

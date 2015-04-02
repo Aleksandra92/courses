@@ -55,7 +55,7 @@ public class StudentDaoInMemoryImplTest {
     @Test
     public void testDeleteById() throws Exception {
         this.studentDao.delete(2L);
-        Assert.assertNull(this.studentDao.get(1L));
+        Assert.assertNull(this.studentDao.get(2L));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class StudentDaoInMemoryImplTest {
     public void testGetStudentsFromGroup() throws Exception {
         Group group = new Group();
         group.setId(2L);
-        int year = 2006;
+        int year = 2007;
         this.studentDao.getStudentsFromGroup(group, year);
         Assert.assertEquals(2, this.studentDao.getStudentsFromGroup(group,year).size());
     }
@@ -104,7 +104,7 @@ public class StudentDaoInMemoryImplTest {
     public void testRemoveStudentsFromGroup() throws Exception {
         Group group = new Group();
         group.setId(2L);
-        int year = 2006;
+        int year = 2007;
         Assert.assertEquals(2, this.studentDao.getStudentsFromGroup(group, year).size());
         this.studentDao.removeStudentsFromGroup(group, year);
         Assert.assertEquals(0, this.studentDao.getStudentsFromGroup(group, year).size());

@@ -73,7 +73,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
         c.set(1990, Calendar.MARCH, 20);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
-        s.setEducationYear(2006);
+        s.setEducationYear(2007);
         students.add(s);
 
         s = new Student();
@@ -85,7 +85,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
         c.set(1990, Calendar.JUNE, 10);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
-        s.setEducationYear(2006);
+        s.setEducationYear(2007);
         students.add(s);
 
         // Первая группа
