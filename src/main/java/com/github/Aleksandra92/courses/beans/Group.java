@@ -3,19 +3,10 @@ package com.github.Aleksandra92.courses.beans;
 /**
  * Author: Aleksandra Perova. Created on 30.03.2015.
  */
-public class Group {
-    private int groupId;
+public class Group extends Entity {
     private String groupName;
     private String curator;
     private String speciality;
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
 
     public String getGroupName() {
         return groupName;

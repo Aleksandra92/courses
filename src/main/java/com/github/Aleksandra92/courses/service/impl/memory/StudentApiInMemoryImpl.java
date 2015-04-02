@@ -21,65 +21,14 @@ public class StudentApiInMemoryImpl implements StudentApi {
         this.studentDao = new StudentDaoInMemoryImpl(loadStudents());
     }
 
-    public List<Student> loadStudents() {
-        List<Student> students = new ArrayList<Student>();
-        Student s = new Student();
-        Calendar c = Calendar.getInstance();
-        s.setStudentId(1);
-        s.setFirstName("Иван");
-        s.setMiddleName("Сергеевич");
-        s.setLastName("Степанов");
-        s.setSex('М');
-        c.set(1990, 3, 20);
-        s.setDateOfBirth(c.getTime());
-        s.setGroupId(2);
-        s.setEducationYear(2006);
-        students.add(s);
-
-        s = new Student();
-        s.setStudentId(2);
-        s.setFirstName("Наталья");
-        s.setMiddleName("Андреевна");
-        s.setLastName("Чичикова");
-        s.setSex('Ж');
-        c.set(1990, 6, 10);
-        s.setDateOfBirth(c.getTime());
-        s.setGroupId(2);
-        s.setEducationYear(2006);
-        students.add(s);
-
-        // Первая группа
-        s = new Student();
-        s.setStudentId(3);
-        s.setFirstName("Петр");
-        s.setMiddleName("Викторович");
-        s.setLastName("Сушкин");
-        s.setSex('М');
-        c.set(1991, 3, 12);
-        s.setDateOfBirth(c.getTime());
-        s.setEducationYear(2006);
-        s.setGroupId(1);
-        students.add(s);
-
-        s = new Student();
-        s.setStudentId(4);
-        s.setFirstName("Вероника");
-        s.setMiddleName("Сергеевна");
-        s.setLastName("Ковалева");
-        s.setSex('Ж');
-        c.set(1991, 7, 19);
-        s.setDateOfBirth(c.getTime());
-        s.setEducationYear(2006);
-        s.setGroupId(1);
-        students.add(s);
-
-        return students;
+    @Override
+    public Student getStudent(Long id) {
+        return studentDao.get(id);
     }
-
 
     @Override
     public List<Student> getAllStudents() {
-        return studentDao.getAllStudents();
+        return studentDao.getAll();
     }
 
     @Override
@@ -99,16 +48,71 @@ public class StudentApiInMemoryImpl implements StudentApi {
 
     @Override
     public void updateStudent(Student student) {
-        studentDao.updateStudent(student);
+        studentDao.saveOrUpdate(student);
     }
 
     @Override
     public void deleteStudent(Student student) {
-        studentDao.deleteStudent(student);
+        studentDao.delete(student);
     }
 
     @Override
     public void insertStudent(Student student) {
-        studentDao.insertStudent(student);
+        studentDao.get(student.getId());
+    }
+
+    private List<Student> loadStudents() {
+        List<Student> students = new ArrayList<>();
+        Student s = new Student();
+        Calendar c = Calendar.getInstance();
+        s.setId(1L);
+        s.setFirstName("Иван");
+        s.setMiddleName("Сергеевич");
+        s.setLastName("Степанов");
+        s.setSex('М');
+        c.set(1990, Calendar.MARCH, 20);
+        s.setDateOfBirth(c.getTime());
+        s.setGroupId(2L);
+        s.setEducationYear(2006);
+        students.add(s);
+
+        s = new Student();
+        s.setId(2L);
+        s.setFirstName("Наталья");
+        s.setMiddleName("Андреевна");
+        s.setLastName("Чичикова");
+        s.setSex('Ж');
+        c.set(1990, Calendar.JUNE, 10);
+        s.setDateOfBirth(c.getTime());
+        s.setGroupId(2L);
+        s.setEducationYear(2006);
+        students.add(s);
+
+        // Первая группа
+        s = new Student();
+        s.setId(3L);
+        s.setFirstName("Петр");
+        s.setMiddleName("Викторович");
+        s.setLastName("Сушкин");
+        s.setSex('М');
+        c.set(1991, Calendar.MARCH, 12);
+        s.setDateOfBirth(c.getTime());
+        s.setEducationYear(2006);
+        s.setGroupId(1L);
+        students.add(s);
+
+        s = new Student();
+        s.setId(4L);
+        s.setFirstName("Вероника");
+        s.setMiddleName("Сергеевна");
+        s.setLastName("Ковалева");
+        s.setSex('Ж');
+        c.set(1991, Calendar.JULY, 19);
+        s.setDateOfBirth(c.getTime());
+        s.setEducationYear(2006);
+        s.setGroupId(1L);
+        students.add(s);
+
+        return students;
     }
 }

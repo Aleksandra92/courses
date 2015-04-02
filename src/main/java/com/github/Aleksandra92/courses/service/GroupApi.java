@@ -11,7 +11,7 @@ public interface GroupApi {
 
     /**
      *Получить список групп
-     * @return
+     * @return Список групп.
      */
     List<Group> getGroups();
 

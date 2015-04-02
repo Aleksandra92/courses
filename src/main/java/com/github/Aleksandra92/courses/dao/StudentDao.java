@@ -8,53 +8,33 @@ import java.util.List;
 /**
  * Author: Aleksandra Perova. Created on 31.03.2015.
  */
-public interface StudentDao {
-    /**
-     *Получить список студентов
-     * @return
-     */
-    List<Student> getAllStudents();
+public interface StudentDao extends AbstractDao<Student> {
 
     /**
-     *Получить список студентов для определенной группы
-     * @param group
-     * @param year
-     * @return
+     * Получить список студентов для определенной группы.
+     *
+     * @param group Определенная группа.
+     * @param year Год.
+     * @return Выдает список студентов определенной группы.
      */
     List<Student> getStudentsFromGroup(Group group, int year);
 
     /**
-     *Перевести студентов из одной группы с одним годом обучения в другую группу с другим годом обучения
-     * @param oldGroup
-     * @param oldYear
-     * @param newGroup
-     * @param newYear
+     * Перевести студентов из одной группы с одним годом обучения в другую группу с другим годом обучения.
+     *
+     * @param oldGroup Старая группа.
+     * @param oldYear Прошлый год.
+     * @param newGroup Новая группа.
+     * @param newYear Новый год обучения.
      */
     void moveStudentsToGroup(Group oldGroup, int oldYear, Group newGroup, int newYear);
 
     /**
-     *Удалить всех студентов из определенной группы
-     * @param group
-     * @param year
+     * Удалить всех студентов из определенной группы.
+     *
+     * @param group Группа.
+     * @param year Год обучения.
      */
     void removeStudentsFromGroup(Group group, int year);
-
-    /**
-     *Обновить данные о студенте
-     * @param student
-     */
-    void updateStudent(Student student);
-
-    /**
-     *Удалить студенте
-     * @param student
-     */
-    void deleteStudent(Student student);
-
-    /**
-     *Добавить студента
-     * @param student
-     */
-    void insertStudent(Student student);
 
 }

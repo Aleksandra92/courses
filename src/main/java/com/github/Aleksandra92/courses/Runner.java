@@ -5,7 +5,6 @@ import com.github.Aleksandra92.courses.beans.Student;
 import com.github.Aleksandra92.courses.service.ApiFactory;
 
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,15 +42,15 @@ public class Runner {
         System.out.println();
 
         Student s = new Student();
-        s.setStudentId(5);
+        s.setId(5L);
         s.setFirstName("Игорь");
         s.setMiddleName("Владимирович");
         s.setLastName("Перебежкин");
         s.setSex('М');
         Calendar c = Calendar.getInstance();
-        c.set(1991, 8, 31);
+        c.set(1991, Calendar.SEPTEMBER, 31);
         s.setDateOfBirth(c.getTime());
-        s.setGroupId(1);
+        s.setGroupId(1L);
         s.setEducationYear(2006);
         System.out.println("Добавление студента:" + s);
         System.out.println("********************");
@@ -64,15 +63,15 @@ public class Runner {
         System.out.println();
 
         s = new Student();
-        s.setStudentId(5);
+        s.setId(5L);
         s.setFirstName("Игорь");
         s.setMiddleName("Владимирович");
         s.setLastName("Новоперебежкин");
         s.setSex('М');
         c = Calendar.getInstance();
-        c.set(1991, 8, 31);
+        c.set(1991, Calendar.SEPTEMBER, 31);
         s.setDateOfBirth(c.getTime());
-        s.setGroupId(1);
+        s.setGroupId(1L);
         s.setEducationYear(2006);
         System.out.println("Редактирование данных студента:" + s);
         System.out.println("*******************************");
@@ -111,8 +110,8 @@ public class Runner {
         ApiFactory.getStudentApiInstance().removeStudentsFromGroup(g2, 2006);
         System.out.println("--->> Полный список студентов после удаления");
         allStudends = ApiFactory.getStudentApiInstance().getAllStudents();
-        for (Iterator i = allStudends.iterator(); i.hasNext();) {
-            System.out.println(i.next());
+        for (Student student : allStudends) {
+            System.out.println(student);
         }
         System.out.println();
     }

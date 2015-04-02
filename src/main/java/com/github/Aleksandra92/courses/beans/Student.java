@@ -8,23 +8,14 @@ import java.util.Locale;
 /**
  * Author: Aleksandra Perova. Created on 30.03.2015.
  */
-public class Student implements Comparable {
-    private int studentId;
+public class Student extends Entity implements Comparable {
     private String lastName;
     private String firstName;
     private String middleName;
     private Date dateOfBirth;
     private char sex;
-    private int groupId;
+    private Long groupId;
     private int educationYear;
-
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
 
     public String getLastName() {
         return lastName;
@@ -66,11 +57,11 @@ public class Student implements Comparable {
         this.sex = sex;
     }
 
-    public int getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
@@ -84,10 +75,10 @@ public class Student implements Comparable {
 
     @Override
     public String toString() {
-        String COMMA_SEPARATOR = " ";
-        return "Студент: " + lastName + COMMA_SEPARATOR + firstName + COMMA_SEPARATOR + middleName + "," +
+
+        return "Студент: " + lastName + " " + firstName + " " + middleName + "," +
                 DateFormat.getDateInstance(DateFormat.SHORT).format(dateOfBirth)
-                + ", Группа ИД=" + studentId + " Год: " + educationYear;
+                + ", Группа ИД=" + getGroupId() + " Год: " + educationYear;
     }
 
     public int compareTo(Object o) {
