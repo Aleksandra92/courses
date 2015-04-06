@@ -2,6 +2,8 @@ package com.github.Aleksandra92.courses.service;
 
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
+import com.github.Aleksandra92.courses.exceptions.StudentException;
+import com.github.Aleksandra92.courses.service.impl.memory.StudentApiInMemoryImpl;
 
 import java.util.List;
 
@@ -14,14 +16,14 @@ public interface StudentApi {
      * @param id Id студента.
      * @return Возвращает Id студента.
      */
-    Student getStudent(Long id);
+    Student getStudent(Long id) throws StudentException;
 
     /**
      * Получить список студентов
      *
      * @return Список студентов.
      */
-    List<Student> getAllStudents();
+    List<Student> getAllStudents() throws StudentException;
 
     /**
      * Получить список студентов для определенной группы
@@ -30,7 +32,7 @@ public interface StudentApi {
      * @param year Год.
      * @return Список студентов определенной группы.
      */
-    List<Student> getStudentsFromGroup(Group group, int year);
+    List<Student> getStudentsFromGroup(Group group, int year) throws StudentException;
 
     /**
      * Перевести студентов из одной группы с одним годом обучения в другую группу с другим годом обучения
@@ -40,7 +42,7 @@ public interface StudentApi {
      * @param newGroup Новая группа.
      * @param newYear Новый обучающий год.
      */
-    void moveStudentsToGroup(Group oldGroup, int oldYear, Group newGroup, int newYear);
+    void moveStudentsToGroup(Group oldGroup, int oldYear, Group newGroup, int newYear) throws StudentException;
 
     /**
      * Удалить всех студентов из определенной группы
@@ -48,26 +50,36 @@ public interface StudentApi {
      * @param group Группа.
      * @param year Год.
      */
-    void removeStudentsFromGroup(Group group, int year);
+    void removeStudentsFromGroup(Group group, int year) throws StudentException;
 
     /**
      * Обновить данные о студенте
      *
      * @param student Студент.
      */
-    void updateStudent(Student student);
+    void updateStudent(Student student) throws StudentException;
 
     /**
      * Удалить студенте
      *
      * @param student Студент.
      */
-    void deleteStudent(Student student);
+    void deleteStudent(Student student) throws StudentException;
 
     /**
      * Добавить студента
      *
      * @param student Студент.
      */
-    void insertStudent(Student student);
+    void insertStudent(Student student) throws StudentException;
+
+    void deleteAll();
+
+    void addAll(List<Student> student);
+
+    class Factory {
+        public static synchronized StudentApi getInstance() {
+            return StudentApiInMemoryImpl.getInstance();
+        }
+    }
 }

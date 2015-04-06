@@ -66,4 +66,14 @@ public class GroupDaoInMemoryImpl implements GroupDao {
         return groups;
     }
 
+    @Override
+    public void deleteAll() {
+        groups.clear();
+    }
+
+    @Override
+    public void addAll(List<Group> group) {
+        groups.addAll(group);
+    }
+
 }

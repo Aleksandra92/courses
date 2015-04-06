@@ -3,6 +3,7 @@ package com.github.Aleksandra92.courses.service.impl.memory;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.dao.GroupDao;
 import com.github.Aleksandra92.courses.dao.impl.memory.GroupDaoInMemoryImpl;
+import com.github.Aleksandra92.courses.exceptions.GroupException;
 import com.github.Aleksandra92.courses.service.GroupApi;
 
 import java.util.ArrayList;
@@ -13,15 +14,33 @@ import java.util.List;
  */
 public class GroupApiInMemoryImpl implements GroupApi {
 
+    private static GroupApiInMemoryImpl instance;
     private GroupDao groupDao;
 
-    public GroupApiInMemoryImpl() {
+    private GroupApiInMemoryImpl() {
         this.groupDao = new GroupDaoInMemoryImpl(loadGroups());
     }
 
+    public static synchronized GroupApi getInstance() {
+        if (instance == null) {
+            instance = new GroupApiInMemoryImpl();
+        }
+        return instance;
+    }
+
     @Override
-    public List<Group> getGroups() {
+    public List<Group> getGroups() throws GroupException {
         return groupDao.getAll();
+    }
+
+    @Override
+    public void deleteAll() {
+        groupDao.deleteAll();
+    }
+
+    @Override
+    public void addAll(List<Group> group) {
+        groupDao.addAll(group);
     }
 
     private List<Group> loadGroups() {

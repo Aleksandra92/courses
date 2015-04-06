@@ -1,6 +1,8 @@
 package com.github.Aleksandra92.courses.service;
 
 import com.github.Aleksandra92.courses.beans.Group;
+import com.github.Aleksandra92.courses.exceptions.GroupException;
+import com.github.Aleksandra92.courses.service.impl.memory.GroupApiInMemoryImpl;
 
 import java.util.List;
 
@@ -13,6 +15,15 @@ public interface GroupApi {
      *Получить список групп
      * @return Список групп.
      */
-    List<Group> getGroups();
+    List<Group> getGroups() throws GroupException;
 
+    void deleteAll();
+
+    void addAll(List<Group> group);
+
+    class Factory {
+        public static synchronized GroupApi getInstance() {
+            return GroupApiInMemoryImpl.getInstance();
+        }
+    }
 }

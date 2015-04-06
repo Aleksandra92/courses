@@ -74,6 +74,16 @@ public class StudentDaoInMemoryImpl implements StudentDao {
     }
 
     @Override
+    public void deleteAll() {
+        students.clear();
+    }
+
+    @Override
+    public void addAll(List<Student> student) {
+        students.addAll(student);
+    }
+
+    @Override
     public List<Student> getStudentsFromGroup(Group group, int year) {
         List<Student> l = new ArrayList<>();
         for (Student si : students) {

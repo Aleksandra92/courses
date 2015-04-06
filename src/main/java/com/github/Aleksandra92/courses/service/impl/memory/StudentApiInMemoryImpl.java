@@ -4,6 +4,7 @@ import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
 import com.github.Aleksandra92.courses.dao.StudentDao;
 import com.github.Aleksandra92.courses.dao.impl.memory.StudentDaoInMemoryImpl;
+import com.github.Aleksandra92.courses.exceptions.StudentException;
 import com.github.Aleksandra92.courses.service.StudentApi;
 
 import java.util.ArrayList;
@@ -15,50 +16,69 @@ import java.util.List;
  */
 public class StudentApiInMemoryImpl implements StudentApi {
 
+    private static StudentApi instance;
     private StudentDao studentDao;
 
-    public StudentApiInMemoryImpl() {
+    private StudentApiInMemoryImpl() {
         this.studentDao = new StudentDaoInMemoryImpl(loadStudents());
     }
 
+    public static synchronized StudentApi getInstance() {
+        if (instance == null) {
+            instance = new StudentApiInMemoryImpl();
+        }
+        return instance;
+    }
+
     @Override
-    public Student getStudent(Long id) {
+    public Student getStudent(Long id) throws StudentException {
         return studentDao.get(id);
     }
 
     @Override
-    public List<Student> getAllStudents() {
+    public List<Student> getAllStudents() throws StudentException {
         return studentDao.getAll();
     }
 
     @Override
-    public List<Student> getStudentsFromGroup(Group group, int year) {
+    public List<Student> getStudentsFromGroup(Group group, int year) throws StudentException {
         return studentDao.getStudentsFromGroup(group, year);
     }
 
     @Override
-    public void moveStudentsToGroup(Group oldGroup, int oldYear, Group newGroup, int newYear) {
+    public void moveStudentsToGroup(Group oldGroup, int oldYear, Group newGroup, int newYear) throws StudentException {
         studentDao.moveStudentsToGroup(oldGroup, oldYear, newGroup, newYear);
     }
 
     @Override
-    public void removeStudentsFromGroup(Group group, int year) {
+    public void removeStudentsFromGroup(Group group, int year) throws StudentException {
         studentDao.removeStudentsFromGroup(group, year);
     }
 
     @Override
-    public void updateStudent(Student student) {
+    public void updateStudent(Student student) throws StudentException {
         studentDao.saveOrUpdate(student);
     }
 
     @Override
-    public void deleteStudent(Student student) {
+    public void deleteStudent(Student student) throws StudentException {
         studentDao.delete(student);
     }
 
     @Override
-    public void insertStudent(Student student) {
+    public void insertStudent(Student student) throws StudentException {
         studentDao.get(student.getId());
+    }
+
+    @Override
+    public void deleteAll() {
+        studentDao.deleteAll();
+    }
+
+    @Override
+    public void addAll(List<Student> student) {
+        studentDao.addAll(student);
+
     }
 
     private List<Student> loadStudents() {
