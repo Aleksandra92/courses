@@ -14,18 +14,16 @@ import java.util.List;
  */
 public class GroupApiInMemoryImplTest {
 
-    private GroupApi groupApi = GroupApi.Factory.getInstance();
-
     @Before
-    public void setUp() {
-        this.groupApi.deleteAll();
-        this.groupApi.addAll(loadGroups());
+    public void setUp() throws Exception {
+        GroupApi.Factory.getInstance().deleteAll();
+        GroupApi.Factory.getInstance().addAll(loadGroups());
     }
 
     @Test
     public void testGetGroups() throws Exception {
-        this.groupApi.getGroups();
-        Assert.assertEquals(2, this.groupApi.getGroups().size());
+        GroupApi.Factory.getInstance().getGroups();
+        Assert.assertEquals(2, GroupApi.Factory.getInstance().getGroups().size());
     }
 
     private List<Group> loadGroups() {

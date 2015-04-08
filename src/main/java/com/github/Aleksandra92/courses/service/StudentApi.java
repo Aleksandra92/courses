@@ -3,7 +3,7 @@ package com.github.Aleksandra92.courses.service;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
 import com.github.Aleksandra92.courses.exceptions.StudentException;
-import com.github.Aleksandra92.courses.service.impl.memory.StudentApiInMemoryImpl;
+import com.github.Aleksandra92.courses.service.impl.jdbc.StudentApiJdbcImpl;
 
 import java.util.List;
 
@@ -73,13 +73,13 @@ public interface StudentApi {
      */
     void insertStudent(Student student) throws StudentException;
 
-    void deleteAll();
+    void deleteAll() throws StudentException;
 
-    void addAll(List<Student> student);
+    void addAll(List<Student> student) throws StudentException;
 
     class Factory {
-        public static synchronized StudentApi getInstance() {
-            return StudentApiInMemoryImpl.getInstance();
+        public static synchronized StudentApi getInstance() throws Exception {
+            return StudentApiJdbcImpl.getInstance();
         }
     }
 }

@@ -13,7 +13,7 @@ public class Student extends Entity implements Comparable {
     private String firstName;
     private String middleName;
     private Date dateOfBirth;
-    private char sex;
+    private String sex;
     private Long groupId;
     private int educationYear;
 
@@ -49,11 +49,11 @@ public class Student extends Entity implements Comparable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public char getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(char sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 

@@ -71,12 +71,12 @@ public class StudentApiInMemoryImpl implements StudentApi {
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteAll() throws StudentException {
         studentDao.deleteAll();
     }
 
     @Override
-    public void addAll(List<Student> student) {
+    public void addAll(List<Student> student) throws StudentException {
         studentDao.addAll(student);
 
     }
@@ -89,7 +89,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
         s.setFirstName("Иван");
         s.setMiddleName("Сергеевич");
         s.setLastName("Степанов");
-        s.setSex('М');
+        s.setSex("М");
         c.set(1990, Calendar.MARCH, 20);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
@@ -101,7 +101,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
         s.setFirstName("Наталья");
         s.setMiddleName("Андреевна");
         s.setLastName("Чичикова");
-        s.setSex('Ж');
+        s.setSex("Ж");
         c.set(1990, Calendar.JUNE, 10);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
@@ -114,7 +114,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
         s.setFirstName("Петр");
         s.setMiddleName("Викторович");
         s.setLastName("Сушкин");
-        s.setSex('М');
+        s.setSex("М");
         c.set(1991, Calendar.MARCH, 12);
         s.setDateOfBirth(c.getTime());
         s.setEducationYear(2006);
@@ -126,7 +126,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
         s.setFirstName("Вероника");
         s.setMiddleName("Сергеевна");
         s.setLastName("Ковалева");
-        s.setSex('Ж');
+        s.setSex("Ж");
         c.set(1991, Calendar.JULY, 19);
         s.setDateOfBirth(c.getTime());
         s.setEducationYear(2006);

@@ -34,12 +34,12 @@ public class GroupApiInMemoryImpl implements GroupApi {
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteAll() throws GroupException {
         groupDao.deleteAll();
     }
 
     @Override
-    public void addAll(List<Group> group) {
+    public void addAll(List<Group> group) throws GroupException {
         groupDao.addAll(group);
     }
 

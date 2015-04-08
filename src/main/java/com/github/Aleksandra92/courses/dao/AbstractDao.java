@@ -40,7 +40,7 @@ public interface AbstractDao<T extends Entity, E extends Exception> {
      */
     List<T> getAll() throws E;
 
-    void deleteAll();
+    void deleteAll() throws E;
 
-    void addAll(List<T> entity);
+    void addAll(List<T> entity) throws E;
 }

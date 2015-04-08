@@ -33,7 +33,7 @@ public class StudentDaoInMemoryImplTest {
         student.setFirstName("Иван");
         student.setMiddleName("Сергеевич");
         student.setLastName("Степанов");
-        student.setSex('М');
+        student.setSex("М");
         c.set(1990, Calendar.MARCH, 20);
         student.setDateOfBirth(c.getTime());
         student.setGroupId(2L);
@@ -119,7 +119,7 @@ public class StudentDaoInMemoryImplTest {
         s.setFirstName("Иван");
         s.setMiddleName("Сергеевич");
         s.setLastName("Степанов");
-        s.setSex('М');
+        s.setSex("М");
         c.set(1990, Calendar.MARCH, 20);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
@@ -131,7 +131,7 @@ public class StudentDaoInMemoryImplTest {
         s.setFirstName("Наталья");
         s.setMiddleName("Андреевна");
         s.setLastName("Чичикова");
-        s.setSex('Ж');
+        s.setSex("Ж");
         c.set(1990, Calendar.JUNE, 10);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
@@ -144,7 +144,7 @@ public class StudentDaoInMemoryImplTest {
         s.setFirstName("Петр");
         s.setMiddleName("Викторович");
         s.setLastName("Сушкин");
-        s.setSex('М');
+        s.setSex("М");
         c.set(1991, Calendar.MARCH, 12);
         s.setDateOfBirth(c.getTime());
         s.setEducationYear(2006);
@@ -156,7 +156,7 @@ public class StudentDaoInMemoryImplTest {
         s.setFirstName("Вероника");
         s.setMiddleName("Сергеевна");
         s.setLastName("Ковалева");
-        s.setSex('Ж');
+        s.setSex("Ж");
         c.set(1991, Calendar.JULY, 19);
         s.setDateOfBirth(c.getTime());
         s.setEducationYear(2006);

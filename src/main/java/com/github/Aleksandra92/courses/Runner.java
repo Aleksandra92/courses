@@ -2,8 +2,6 @@ package com.github.Aleksandra92.courses;
 
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
-import com.github.Aleksandra92.courses.exceptions.GroupException;
-import com.github.Aleksandra92.courses.exceptions.StudentException;
 import com.github.Aleksandra92.courses.service.GroupApi;
 import com.github.Aleksandra92.courses.service.StudentApi;
 
@@ -15,10 +13,9 @@ import java.util.List;
  */
 public class Runner {
 
-    private static final GroupApi groupApi = GroupApi.Factory.getInstance();
-    private static final StudentApi studentApi = StudentApi.Factory.getInstance();
-
-    public static void main(String[] args) throws GroupException, StudentException {
+    public static void main(String[] args) throws Exception {
+        final StudentApi studentApi = StudentApi.Factory.getInstance();
+        final GroupApi groupApi = GroupApi.Factory.getInstance();
 
         System.out.println("Полный список групп");
         System.out.println("*******************");
@@ -49,11 +46,10 @@ public class Runner {
         System.out.println();
 
         Student s = new Student();
-        s.setId(5L);
         s.setFirstName("Игорь");
         s.setMiddleName("Владимирович");
         s.setLastName("Перебежкин");
-        s.setSex('М');
+        s.setSex("М");
         Calendar c = Calendar.getInstance();
         c.set(1991, Calendar.SEPTEMBER, 31);
         s.setDateOfBirth(c.getTime());
@@ -69,12 +65,11 @@ public class Runner {
         }
         System.out.println();
 
-        s = new Student();
-        s.setId(5L);
+        s = studentApi.getStudent(4L);
         s.setFirstName("Игорь");
         s.setMiddleName("Владимирович");
         s.setLastName("Новоперебежкин");
-        s.setSex('М');
+        s.setSex("М");
         c = Calendar.getInstance();
         c.set(1991, Calendar.SEPTEMBER, 31);
         s.setDateOfBirth(c.getTime());

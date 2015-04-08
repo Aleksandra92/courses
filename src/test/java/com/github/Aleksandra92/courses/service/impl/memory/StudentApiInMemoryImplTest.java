@@ -16,26 +16,24 @@ import java.util.List;
  */
 public class StudentApiInMemoryImplTest {
 
-    private StudentApi studentApi = StudentApi.Factory.getInstance();
-
     @Before
-    public void setUp() {
-        this.studentApi.deleteAll();
-        this.studentApi.addAll(loadStudents());
+    public void setUp() throws Exception {
+        StudentApi.Factory.getInstance().deleteAll();
+        StudentApi.Factory.getInstance().addAll(loadStudents());
     }
 
     @Test
     public void testGetStudent() throws Exception {
-        Assert.assertNull(this.studentApi.getStudent(6L));
-        Student student = this.studentApi.getStudent(1L);
+        Assert.assertNull(StudentApi.Factory.getInstance().getStudent(6L));
+        Student student = StudentApi.Factory.getInstance().getStudent(1L);
         Assert.assertNotNull(student);
         Assert.assertEquals("Иван", student.getFirstName());
     }
 
     @Test
     public void testGetAllStudents() throws Exception {
-        this.studentApi.getAllStudents();
-        Assert.assertEquals(4, this.studentApi.getAllStudents().size());
+        StudentApi.Factory.getInstance().getAllStudents();
+        Assert.assertEquals(4, StudentApi.Factory.getInstance().getAllStudents().size());
     }
 
     @Test
@@ -43,8 +41,8 @@ public class StudentApiInMemoryImplTest {
         Group group = new Group();
         group.setId(1L);
         int year = 2006;
-        this.studentApi.getStudentsFromGroup(group, year);
-        Assert.assertEquals(2, this.studentApi.getStudentsFromGroup(group, year).size());
+        StudentApi.Factory.getInstance().getStudentsFromGroup(group, year);
+        Assert.assertEquals(2, StudentApi.Factory.getInstance().getStudentsFromGroup(group, year).size());
     }
 
     @Test
@@ -55,8 +53,8 @@ public class StudentApiInMemoryImplTest {
         group.setId(2L);
         int year1 = 2006;
         int year2=2006;
-        this.studentApi.moveStudentsToGroup(group, year1, group1, year2);
-        Assert.assertEquals(0, this.studentApi.getStudentsFromGroup(group, year1).size());
+        StudentApi.Factory.getInstance().moveStudentsToGroup(group, year1, group1, year2);
+        Assert.assertEquals(0, StudentApi.Factory.getInstance().getStudentsFromGroup(group, year1).size());
     }
 
     @Test
@@ -64,32 +62,32 @@ public class StudentApiInMemoryImplTest {
         Group group = new Group();
         group.setId(1L);
         int year = 2006;
-        Assert.assertEquals(2, this.studentApi.getStudentsFromGroup(group, year).size());
-        this.studentApi.removeStudentsFromGroup(group, year);
-        Assert.assertEquals(0, this.studentApi.getStudentsFromGroup(group, year).size());
+        Assert.assertEquals(2, StudentApi.Factory.getInstance().getStudentsFromGroup(group, year).size());
+        StudentApi.Factory.getInstance().removeStudentsFromGroup(group, year);
+        Assert.assertEquals(0, StudentApi.Factory.getInstance().getStudentsFromGroup(group, year).size());
     }
 
     @Test
     public void testUpdateStudent() throws Exception {
-        Student student = this.studentApi.getStudent(1L);
+        Student student = StudentApi.Factory.getInstance().getStudent(1L);
         String lastName = "Новое имя";
         student.setLastName(lastName);
-        this.studentApi.updateStudent(student);
-        student = this.studentApi.getStudent(1L);
+        StudentApi.Factory.getInstance().updateStudent(student);
+        student = StudentApi.Factory.getInstance().getStudent(1L);
         Assert.assertEquals(lastName, student.getLastName());
     }
 
     @Test
     public void testDeleteStudent() throws Exception {
-        Student student = this.studentApi.getStudent(1L);
-        this.studentApi.deleteStudent(student);
-        Assert.assertNull(this.studentApi.getStudent(1L));
+        Student student = StudentApi.Factory.getInstance().getStudent(1L);
+        StudentApi.Factory.getInstance().deleteStudent(student);
+        Assert.assertNull(StudentApi.Factory.getInstance().getStudent(1L));
     }
 
     @Test
     public void testInsertStudent() throws Exception {
-        Student student = this.studentApi.getStudent(1L);
-        this.studentApi.insertStudent(student);
+        Student student = StudentApi.Factory.getInstance().getStudent(1L);
+        StudentApi.Factory.getInstance().insertStudent(student);
         Assert.assertNotNull(student);
     }
 
@@ -101,7 +99,7 @@ public class StudentApiInMemoryImplTest {
         s.setFirstName("Иван");
         s.setMiddleName("Сергеевич");
         s.setLastName("Степанов");
-        s.setSex('М');
+        s.setSex("М");
         c.set(1990, Calendar.MARCH, 20);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
@@ -113,7 +111,7 @@ public class StudentApiInMemoryImplTest {
         s.setFirstName("Наталья");
         s.setMiddleName("Андреевна");
         s.setLastName("Чичикова");
-        s.setSex('Ж');
+        s.setSex("Ж");
         c.set(1990, Calendar.JUNE, 10);
         s.setDateOfBirth(c.getTime());
         s.setGroupId(2L);
@@ -126,7 +124,7 @@ public class StudentApiInMemoryImplTest {
         s.setFirstName("Петр");
         s.setMiddleName("Викторович");
         s.setLastName("Сушкин");
-        s.setSex('М');
+        s.setSex("М");
         c.set(1991, Calendar.MARCH, 12);
         s.setDateOfBirth(c.getTime());
         s.setEducationYear(2006);
@@ -138,7 +136,7 @@ public class StudentApiInMemoryImplTest {
         s.setFirstName("Вероника");
         s.setMiddleName("Сергеевна");
         s.setLastName("Ковалева");
-        s.setSex('Ж');
+        s.setSex("Ж");
         c.set(1991, Calendar.JULY, 19);
         s.setDateOfBirth(c.getTime());
         s.setEducationYear(2006);

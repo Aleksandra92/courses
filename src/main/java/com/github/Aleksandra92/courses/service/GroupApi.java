@@ -2,7 +2,7 @@ package com.github.Aleksandra92.courses.service;
 
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.exceptions.GroupException;
-import com.github.Aleksandra92.courses.service.impl.memory.GroupApiInMemoryImpl;
+import com.github.Aleksandra92.courses.service.impl.jdbc.GroupApiJdbcImpl;
 
 import java.util.List;
 
@@ -17,13 +17,13 @@ public interface GroupApi {
      */
     List<Group> getGroups() throws GroupException;
 
-    void deleteAll();
+    void deleteAll() throws GroupException;
 
-    void addAll(List<Group> group);
+    void addAll(List<Group> group) throws GroupException;
 
     class Factory {
-        public static synchronized GroupApi getInstance() {
-            return GroupApiInMemoryImpl.getInstance();
+        public static synchronized GroupApi getInstance() throws Exception {
+            return GroupApiJdbcImpl.getInstance();
         }
     }
 }
