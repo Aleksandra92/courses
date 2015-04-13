@@ -17,6 +17,14 @@ public interface GroupApi {
      */
     List<Group> getGroups() throws GroupException;
 
+    void saveOrUpdate(Group group) throws GroupException;
+
+    void delete(Long id) throws GroupException;
+
+    void delete(Group group) throws GroupException;
+
+    Group  get(Long id) throws GroupException;
+
     void deleteAll() throws GroupException;
 
     void addAll(List<Group> group) throws GroupException;

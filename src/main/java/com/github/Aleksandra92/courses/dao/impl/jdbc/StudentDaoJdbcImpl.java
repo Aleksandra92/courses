@@ -39,7 +39,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
         try {
             PreparedStatement stmt;
             if (student.getId() == null) {
-                stmt = con.prepareStatement(insertSql);
+                stmt = con.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
             } else {
                 stmt = con.prepareStatement(updateSql);
             }
@@ -54,6 +54,14 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 stmt.setLong(8, student.getId());
             }
             stmt.execute();
+
+            if(student.getId() == null) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        student.setId(generatedKeys.getLong(1));
+                    }
+                }
+            }
         } catch (SQLException e) {
             throw new StudentException("Unable to save or update", e);
         }
@@ -67,7 +75,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
             stmt.setLong(1, id);
             stmt.execute();
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to delete by id", e);
         }
     }
 
@@ -79,7 +87,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
             stmt.setLong(1, student.getId());
             stmt.execute();
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to delete", e);
         }
     }
 
@@ -96,7 +104,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 return mapStudent(rs);
             }
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to get", e);
         }
         return null;
     }
@@ -115,7 +123,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 students.add(mapStudent(rs));
             }
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to getAll", e);
         }
         return students;
     }
@@ -127,7 +135,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.execute();
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to deleteAll", e);
         }
     }
 
@@ -160,7 +168,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 students.add(mapStudent(rs));
             }
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to get student from group", e);
         }
         return students;
     }
@@ -178,7 +186,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
             stmt.setInt(4, oldYear);
             stmt.execute();
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to move students to group", e);
         }
     }
 
@@ -191,7 +199,7 @@ public class StudentDaoJdbcImpl implements StudentDao {
             stmt.setInt(2, year);
             stmt.execute();
         } catch (SQLException e) {
-            throw new StudentException("Unable to save or update", e);
+            throw new StudentException("Unable to remove students from group", e);
         }
     }
 

@@ -71,6 +71,11 @@ public class StudentApiInMemoryImpl implements StudentApi {
     }
 
     @Override
+    public void delete(Long id) throws StudentException {
+        studentDao.delete(id);
+    }
+
+    @Override
     public void deleteAll() throws StudentException {
         studentDao.deleteAll();
     }

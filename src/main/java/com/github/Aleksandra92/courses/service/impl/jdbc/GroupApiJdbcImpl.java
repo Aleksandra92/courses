@@ -33,6 +33,26 @@ public class GroupApiJdbcImpl implements GroupApi {
     }
 
     @Override
+    public void saveOrUpdate(Group group) throws GroupException {
+        groupDao.saveOrUpdate(group);
+    }
+
+    @Override
+    public void delete(Long id) throws GroupException {
+        groupDao.delete(id);
+    }
+
+    @Override
+    public void delete(Group group) throws GroupException {
+        groupDao.delete(group);
+    }
+
+    @Override
+    public Group get(Long id) throws GroupException {
+        return groupDao.get(id);
+    }
+
+    @Override
     public void deleteAll() throws GroupException {
         groupDao.deleteAll();
     }

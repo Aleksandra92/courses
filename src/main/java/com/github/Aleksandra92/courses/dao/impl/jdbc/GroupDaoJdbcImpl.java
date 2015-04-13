@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Author: Aleksandra Perova. Created on 03.04.2015.
  */
-public class GroupDaoJdbcImpl implements GroupDao{
+public class GroupDaoJdbcImpl implements GroupDao {
 
     private static Connection con;
 
@@ -29,7 +29,7 @@ public class GroupDaoJdbcImpl implements GroupDao{
     @Override
     public void saveOrUpdate(Group group) throws GroupException {
         String updateSql = "UPDATE groups SET " +
-                "group_name=?, curator=?, speciality=? " +
+                "group_name=?, curator=?, speciality=?" +
                 "WHERE group_id=?";
 
         String insertSql = "INSERT INTO groups " +
@@ -39,33 +39,40 @@ public class GroupDaoJdbcImpl implements GroupDao{
         try {
             PreparedStatement stmt;
             if (group.getId() == null) {
-                stmt = con.prepareStatement(insertSql);
+                stmt = con.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
             } else {
                 stmt = con.prepareStatement(updateSql);
             }
-                stmt.setString(1, group.getGroupName());
-                stmt.setString(2, group.getCurator());
-                stmt.setString(3, group.getSpeciality());
+            stmt.setString(1, group.getGroupName());
+            stmt.setString(2, group.getCurator());
+            stmt.setString(3, group.getSpeciality());
             if (group.getId() != null) {
                 stmt.setLong(4, group.getId());
             }
-                stmt.execute();
-
-            } catch (SQLException e) {
-                throw new GroupException("Unable to save or update", e);
+            stmt.execute();
+            if (group.getId() == null) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        group.setId(generatedKeys.getLong(1));
+                    }
+                }
             }
+
+        } catch (SQLException e) {
+            throw new GroupException("Unable to save or update", e);
+        }
 
     }
 
     @Override
     public void delete(Long id) throws GroupException {
         String sql = "DELETE FROM groups WHERE group_id=?";
-          try {
+        try {
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setLong(1, id);
             stmt.execute();
         } catch (SQLException e) {
-            throw new GroupException("Unable to save or update", e);
+            throw new GroupException("Unable to delete by id", e);
         }
     }
 
@@ -77,23 +84,27 @@ public class GroupDaoJdbcImpl implements GroupDao{
             stmt.setLong(1, group.getId());
             stmt.execute();
         } catch (SQLException e) {
-            throw new GroupException("Unable to save or update", e);
+            throw new GroupException("Unable to delete", e);
         }
     }
 
     @Override
     public Group get(Long id) throws GroupException {
-        String sql = "SELECT group_name, curator, speciality " +
+        String sql = "SELECT group_id, group_name, curator, speciality " +
                 " FROM groups " +
-                "WHERE group_id= '" + id + "' ";
+                "WHERE group_id=?";
         try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            return mapGroup(rs);
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapGroup(rs);
+            }
 
         } catch (SQLException e) {
-            throw new GroupException("Unable to save or update", e);
+            throw new GroupException("Unable to get", e);
         }
+        return null;
     }
 
     @Override
@@ -108,25 +119,25 @@ public class GroupDaoJdbcImpl implements GroupDao{
                 groups.add(mapGroup(rs));
             }
         } catch (SQLException e) {
-            throw new GroupException("Unable to save or update", e);
+            throw new GroupException("Unable to getAll", e);
         }
         return groups;
     }
 
     @Override
-    public void deleteAll() throws GroupException{
+    public void deleteAll() throws GroupException {
         String sql = "TRUNCATE TABLE groups";
         try {
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.execute();
         } catch (SQLException e) {
-            throw new GroupException("Unable to save or update", e);
+            throw new GroupException("Unable to delete All", e);
         }
     }
 
     @Override
     public void addAll(List<Group> groups) {
-        for(Group group: groups){
+        for (Group group : groups) {
             try {
                 saveOrUpdate(group);
             } catch (GroupException e) {

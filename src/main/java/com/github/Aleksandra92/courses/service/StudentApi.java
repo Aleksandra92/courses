@@ -73,6 +73,8 @@ public interface StudentApi {
      */
     void insertStudent(Student student) throws StudentException;
 
+    void delete(Long id) throws StudentException;
+
     void deleteAll() throws StudentException;
 
     void addAll(List<Student> student) throws StudentException;
