@@ -34,7 +34,12 @@ public class GroupApiInMemoryImpl implements GroupApi {
     }
 
     @Override
-    public void saveOrUpdate(Group group) throws GroupException {
+    public void updateGroup(Group group) throws GroupException {
+        groupDao.saveOrUpdate(group);
+    }
+
+    @Override
+    public void insertGroup(Group group) throws GroupException {
         groupDao.saveOrUpdate(group);
     }
 
@@ -66,14 +71,12 @@ public class GroupApiInMemoryImpl implements GroupApi {
     private List<Group> loadGroups() {
         List<Group> groups = new ArrayList<>();
         Group g = new Group();
-        g.setId(1L);
         g.setGroupName("Первая");
         g.setCurator("Доктор Борменталь");
         g.setSpeciality("Создание собачек из человеков");
         groups.add(g);
 
         g = new Group();
-        g.setId(2L);
         g.setGroupName("Вторая");
         g.setCurator("Профессор Преображенский");
         g.setSpeciality("Создание человеков из собачек");

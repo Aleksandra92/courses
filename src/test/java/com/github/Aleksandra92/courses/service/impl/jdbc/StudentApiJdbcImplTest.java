@@ -1,5 +1,6 @@
 package com.github.Aleksandra92.courses.service.impl.jdbc;
 
+import com.github.Aleksandra92.courses.Type;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
 import com.github.Aleksandra92.courses.service.StudentApi;
@@ -19,6 +20,7 @@ public class StudentApiJdbcImplTest {
 
     @Before
     public void setUp() throws Exception {
+        System.setProperty(Type.class.getSimpleName(), Type.JDBC.toString());
         List<Student> students = new ArrayList<>();
         Student student = new Student();
         Calendar c = Calendar.getInstance();

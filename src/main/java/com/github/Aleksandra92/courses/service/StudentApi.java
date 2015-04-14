@@ -1,9 +1,11 @@
 package com.github.Aleksandra92.courses.service;
 
+import com.github.Aleksandra92.courses.Type;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
 import com.github.Aleksandra92.courses.exceptions.StudentException;
 import com.github.Aleksandra92.courses.service.impl.jdbc.StudentApiJdbcImpl;
+import com.github.Aleksandra92.courses.service.impl.memory.StudentApiInMemoryImpl;
 
 import java.util.List;
 
@@ -81,7 +83,11 @@ public interface StudentApi {
 
     class Factory {
         public static synchronized StudentApi getInstance() throws Exception {
-            return StudentApiJdbcImpl.getInstance();
+            if (Type.JDBC.toString().equals(System.getProperty(Type.class.getSimpleName()))) {
+                return StudentApiJdbcImpl.getInstance();
+            } else {
+                return StudentApiInMemoryImpl.getInstance();
+            }
         }
     }
 }

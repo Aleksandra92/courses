@@ -1,5 +1,6 @@
 package com.github.Aleksandra92.courses.service.impl.jdbc;
 
+import com.github.Aleksandra92.courses.Type;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.service.GroupApi;
 import org.junit.*;
@@ -19,6 +20,7 @@ public class GroupApiJdbcImplTest {
 
     @Before
     public void setUp() throws Exception {
+        System.setProperty(Type.class.getSimpleName(), Type.JDBC.toString());
         List<Group> groups = new ArrayList<>();
         Group g = new Group();
         g.setGroupName(GROUP_NAME);
@@ -44,7 +46,7 @@ public class GroupApiJdbcImplTest {
         Group group = GroupApi.Factory.getInstance().get(groupId);
         String curator = "Новый куратор";
         group.setCurator(curator);
-        GroupApi.Factory.getInstance().saveOrUpdate(group);
+        GroupApi.Factory.getInstance().insertGroup(group);
         group = GroupApi.Factory.getInstance().get(groupId);
         Assert.assertEquals(curator, group.getCurator());
     }

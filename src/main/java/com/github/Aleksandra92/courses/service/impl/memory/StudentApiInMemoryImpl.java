@@ -67,7 +67,7 @@ public class StudentApiInMemoryImpl implements StudentApi {
 
     @Override
     public void insertStudent(Student student) throws StudentException {
-        studentDao.get(student.getId());
+        studentDao.saveOrUpdate(student);
     }
 
     @Override
@@ -90,7 +90,6 @@ public class StudentApiInMemoryImpl implements StudentApi {
         List<Student> students = new ArrayList<>();
         Student s = new Student();
         Calendar c = Calendar.getInstance();
-        s.setId(1L);
         s.setFirstName("Иван");
         s.setMiddleName("Сергеевич");
         s.setLastName("Степанов");
@@ -102,7 +101,6 @@ public class StudentApiInMemoryImpl implements StudentApi {
         students.add(s);
 
         s = new Student();
-        s.setId(2L);
         s.setFirstName("Наталья");
         s.setMiddleName("Андреевна");
         s.setLastName("Чичикова");
@@ -115,7 +113,6 @@ public class StudentApiInMemoryImpl implements StudentApi {
 
         // Первая группа
         s = new Student();
-        s.setId(3L);
         s.setFirstName("Петр");
         s.setMiddleName("Викторович");
         s.setLastName("Сушкин");
@@ -127,7 +124,6 @@ public class StudentApiInMemoryImpl implements StudentApi {
         students.add(s);
 
         s = new Student();
-        s.setId(4L);
         s.setFirstName("Вероника");
         s.setMiddleName("Сергеевна");
         s.setLastName("Ковалева");

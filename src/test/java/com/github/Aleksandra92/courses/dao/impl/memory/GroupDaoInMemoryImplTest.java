@@ -2,6 +2,7 @@ package com.github.Aleksandra92.courses.dao.impl.memory;
 
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.dao.GroupDao;
+import com.github.Aleksandra92.courses.exceptions.GroupException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,73 +15,71 @@ import java.util.List;
  */
 public class GroupDaoInMemoryImplTest {
 
+    public static final String GROUP_NAME = "Первая";
     private GroupDao groupDao;
+    private Long groupId;
 
     @Before
-    public void setUp() {
+    public void setUp() throws GroupException {
         this.groupDao = new GroupDaoInMemoryImpl(loadGroups());
+        Group group = new Group();
+        group.setGroupName(GROUP_NAME);
+        group.setCurator("Доктор Борменталь");
+        group.setSpeciality("Создание собачек из человеков");
+        this.groupDao.saveOrUpdate(group);
+        this.groupId = group.getId();
     }
 
     @Test
     public void testSave() throws Exception {
-        Assert.assertNull(this.groupDao.get(3L));
-        Group group = new Group();
-        group.setId(3L);
-        group.setGroupName("Вторая");
-        group.setCurator("Профессор Преображенский");
-        group.setSpeciality("Создание человеков из собачек");
-        this.groupDao.saveOrUpdate(group);
-        Assert.assertNotNull(this.groupDao.get(3L));
+        Assert.assertNotNull(this.groupDao.get(this.groupId));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Group group = this.groupDao.get(1L);
+        Group group = this.groupDao.get(this.groupId);
         String curator = "Новый куратор";
         group.setCurator(curator);
         this.groupDao.saveOrUpdate(group);
-        group = this.groupDao.get(1L);
+        group = this.groupDao.get(this.groupId);
         Assert.assertEquals(curator, group.getCurator());
     }
 
     @Test
     public void testDeleteById() throws Exception {
-        this.groupDao.delete(1L);
-        Assert.assertNull(this.groupDao.get(1L));
+        this.groupDao.delete(this.groupId);
+        Assert.assertNull(this.groupDao.get(this.groupId));
     }
 
     @Test
     public void testDelete() throws Exception {
-        Group group = this.groupDao.get(1L);
+        Group group = this.groupDao.get(this.groupId);
         this.groupDao.delete(group);
-        Assert.assertNull(this.groupDao.get(1L));
+        Assert.assertNull(this.groupDao.get(this.groupId));
     }
 
     @Test
     public void testGet() throws Exception {
-        Assert.assertNull(this.groupDao.get(3L));
-        Group group = this.groupDao.get(1L);
+        Group group = this.groupDao.get(this.groupId);
         Assert.assertNotNull(group);
-        Assert.assertEquals("Первая", group.getGroupName());
+        Assert.assertEquals(GROUP_NAME, group.getGroupName());
     }
 
     @Test
     public void testGetAll() throws Exception {
         this.groupDao.getAll();
-        Assert.assertEquals(2,this.groupDao.getAll().size());
+        Assert.assertEquals(3,this.groupDao.getAll().size());
     }
 
     private List<Group> loadGroups() {
         List<Group> groups = new ArrayList<>();
         Group g = new Group();
-        g.setId(1L);
         g.setGroupName("Первая");
         g.setCurator("Доктор Борменталь");
         g.setSpeciality("Создание собачек из человеков");
         groups.add(g);
 
         g = new Group();
-        g.setId(2L);
         g.setGroupName("Вторая");
         g.setCurator("Профессор Преображенский");
         g.setSpeciality("Создание человеков из собачек");

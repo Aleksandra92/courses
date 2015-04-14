@@ -16,7 +16,8 @@ public class StudentDaoInMemoryImpl implements StudentDao {
     List<Student> students;
 
     public StudentDaoInMemoryImpl(List<Student> students) {
-        this.students = students;
+        this.students = new ArrayList<>(students.size());
+        addAll(students);
     }
 
     @Override
@@ -29,6 +30,7 @@ public class StudentDaoInMemoryImpl implements StudentDao {
             }
         }
         if (updStudent == null) {
+            student.setId(Counter.getNextId());
             students.add(student);
         } else {
             updStudent.setFirstName(student.getFirstName());
@@ -79,8 +81,10 @@ public class StudentDaoInMemoryImpl implements StudentDao {
     }
 
     @Override
-    public void addAll(List<Student> student) {
-        students.addAll(student);
+    public void addAll(List<Student> students) {
+        for (Student student : students) {
+            saveOrUpdate(student);
+        }
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.github.Aleksandra92.courses.service;
 
+import com.github.Aleksandra92.courses.Type;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.exceptions.GroupException;
 import com.github.Aleksandra92.courses.service.impl.jdbc.GroupApiJdbcImpl;
+import com.github.Aleksandra92.courses.service.impl.memory.GroupApiInMemoryImpl;
 
 import java.util.List;
 
@@ -17,13 +19,25 @@ public interface GroupApi {
      */
     List<Group> getGroups() throws GroupException;
 
-    void saveOrUpdate(Group group) throws GroupException;
+    /**
+     * Обновить данные о студенте
+     *
+     * @param group Студент.
+     */
+    void updateGroup(Group group) throws GroupException;
+
+    /**
+     * Добавить студента
+     *
+     * @param group Студент.
+     */
+    void insertGroup(Group group) throws GroupException;
 
     void delete(Long id) throws GroupException;
 
     void delete(Group group) throws GroupException;
 
-    Group  get(Long id) throws GroupException;
+    Group get(Long id) throws GroupException;
 
     void deleteAll() throws GroupException;
 
@@ -31,7 +45,11 @@ public interface GroupApi {
 
     class Factory {
         public static synchronized GroupApi getInstance() throws Exception {
-            return GroupApiJdbcImpl.getInstance();
+            if (Type.JDBC.toString().equals(System.getProperty(Type.class.getSimpleName()))) {
+                return GroupApiJdbcImpl.getInstance();
+            } else {
+                return GroupApiInMemoryImpl.getInstance();
+            }
         }
     }
 }

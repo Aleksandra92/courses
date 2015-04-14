@@ -14,16 +14,7 @@ import java.util.List;
  */
 public class GroupDaoJdbcImpl implements GroupDao {
 
-    private static Connection con;
-
-    public GroupDaoJdbcImpl() throws Exception {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/course";
-            con = DriverManager.getConnection(url, "root", "root");
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new Exception(e);
-        }
+    public GroupDaoJdbcImpl() {
     }
 
     @Override
@@ -36,13 +27,14 @@ public class GroupDaoJdbcImpl implements GroupDao {
                 "(group_name, curator, speciality)" +
                 "VALUES (?, ?, ?)";
 
-        try {
-            PreparedStatement stmt;
-            if (group.getId() == null) {
-                stmt = con.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
-            } else {
-                stmt = con.prepareStatement(updateSql);
-            }
+        String sql;
+        if (group.getId() == null) {
+            sql = insertSql;
+        } else {
+            sql = updateSql;
+        }
+        try (Connection con = new ConnectionManager().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, group.getGroupName());
             stmt.setString(2, group.getCurator());
             stmt.setString(3, group.getSpeciality());
@@ -57,18 +49,16 @@ public class GroupDaoJdbcImpl implements GroupDao {
                     }
                 }
             }
-
         } catch (SQLException e) {
             throw new GroupException("Unable to save or update", e);
         }
-
     }
 
     @Override
     public void delete(Long id) throws GroupException {
         String sql = "DELETE FROM groups WHERE group_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, id);
             stmt.execute();
         } catch (SQLException e) {
@@ -79,8 +69,8 @@ public class GroupDaoJdbcImpl implements GroupDao {
     @Override
     public void delete(Group group) throws GroupException {
         String sql = "DELETE FROM groups WHERE group_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, group.getId());
             stmt.execute();
         } catch (SQLException e) {
@@ -93,8 +83,8 @@ public class GroupDaoJdbcImpl implements GroupDao {
         String sql = "SELECT group_id, group_name, curator, speciality " +
                 " FROM groups " +
                 "WHERE group_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -112,8 +102,8 @@ public class GroupDaoJdbcImpl implements GroupDao {
         List<Group> groups = new ArrayList<>();
 
         String sql = "SELECT group_id, group_name, curator, speciality FROM groups";
-        try {
-            Statement stmt = con.createStatement();
+        try (Connection con = new ConnectionManager().getConnection();
+            Statement stmt = con.createStatement()){
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 groups.add(mapGroup(rs));
@@ -127,8 +117,8 @@ public class GroupDaoJdbcImpl implements GroupDao {
     @Override
     public void deleteAll() throws GroupException {
         String sql = "TRUNCATE TABLE groups";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.execute();
         } catch (SQLException e) {
             throw new GroupException("Unable to delete All", e);

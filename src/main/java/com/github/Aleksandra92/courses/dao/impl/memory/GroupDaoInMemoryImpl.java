@@ -3,6 +3,7 @@ package com.github.Aleksandra92.courses.dao.impl.memory;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.dao.GroupDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,10 +11,11 @@ import java.util.List;
  */
 public class GroupDaoInMemoryImpl implements GroupDao {
 
-    List<Group> groups;
+    private List<Group> groups;
 
     public GroupDaoInMemoryImpl(List<Group> groups) {
-        this.groups = groups;
+        this.groups = new ArrayList<>(groups.size());
+        addAll(groups);
     }
 
     @Override
@@ -26,6 +28,7 @@ public class GroupDaoInMemoryImpl implements GroupDao {
             }
         }
         if (updGroup == null) {
+            group.setId(Counter.getNextId());
             groups.add(group);
         } else {
             updGroup.setGroupName(group.getGroupName());
@@ -72,8 +75,9 @@ public class GroupDaoInMemoryImpl implements GroupDao {
     }
 
     @Override
-    public void addAll(List<Group> group) {
-        groups.addAll(group);
+    public void addAll(List<Group> groups) {
+        for (Group group : groups) {
+            saveOrUpdate(group);
+        }
     }
-
 }

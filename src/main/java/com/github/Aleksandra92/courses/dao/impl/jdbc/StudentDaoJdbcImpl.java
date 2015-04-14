@@ -14,16 +14,7 @@ import java.util.List;
  */
 public class StudentDaoJdbcImpl implements StudentDao {
 
-    private static Connection con;
-
-    public StudentDaoJdbcImpl() throws Exception {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/course";
-            con = DriverManager.getConnection(url, "root", "root");
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new Exception(e);
-        }
+    public StudentDaoJdbcImpl(){
     }
 
     @Override
@@ -36,13 +27,14 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 "sex=?, date_of_birth=?, group_id=?, education_year=? "+
                 "WHERE student_id=?";
 
-        try {
-            PreparedStatement stmt;
-            if (student.getId() == null) {
-                stmt = con.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
-            } else {
-                stmt = con.prepareStatement(updateSql);
-            }
+        String sql;
+        if (student.getId() == null) {
+            sql = insertSql;
+        } else {
+            sql = updateSql;
+        }
+        try (Connection con = new ConnectionManager().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, student.getFirstName());
             stmt.setString(2, student.getMiddleName());
             stmt.setString(3, student.getLastName());
@@ -70,8 +62,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public void delete(Long id) throws StudentException {
         String sql = "DELETE FROM students WHERE student_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, id);
             stmt.execute();
         } catch (SQLException e) {
@@ -82,8 +74,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public void delete(Student student) throws StudentException {
         String sql = "DELETE FROM students WHERE student_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, student.getId());
             stmt.execute();
         } catch (SQLException e) {
@@ -96,8 +88,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
         String sql = "SELECT student_id, first_name, middle_name, last_name, " +
                 "sex, date_of_birth, group_id, education_year FROM students " +
                 "WHERE student_id=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -116,8 +108,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 "sex, date_of_birth, group_id, education_year FROM students " +
                 "ORDER BY last_name, first_name, middle_name";
 
-        try {
-            Statement stmt = con.createStatement();
+        try (Connection con = new ConnectionManager().getConnection();
+            Statement stmt = con.createStatement()){
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 students.add(mapStudent(rs));
@@ -131,8 +123,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public void deleteAll()throws StudentException {
         String sql = "TRUNCATE TABLE students";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.execute();
         } catch (SQLException e) {
             throw new StudentException("Unable to deleteAll", e);
@@ -159,8 +151,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
                 "WHERE group_id=? AND education_year=? " +
                 "ORDER BY last_name, first_name, middle_name";
 
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, group.getId());
             stmt.setInt(2, year);
             ResultSet rs = stmt.executeQuery();
@@ -178,8 +170,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
 
         String sql = "UPDATE students SET group_id=?, education_year=? " +
                 "WHERE group_id=? AND education_year=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, newGroup.getId());
             stmt.setInt(2, newYear);
             stmt.setLong(3, oldGroup.getId());
@@ -193,8 +185,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public void removeStudentsFromGroup(Group group, int year) throws StudentException {
         String sql = "DELETE FROM students WHERE group_id=? AND education_year=?";
-        try {
-            PreparedStatement stmt = con.prepareStatement(sql);
+        try (Connection con = new ConnectionManager().getConnection();
+            PreparedStatement stmt = con.prepareStatement(sql)){
             stmt.setLong(1, group.getId());
             stmt.setInt(2, year);
             stmt.execute();
