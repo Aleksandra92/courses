@@ -3,6 +3,7 @@ package com.github.Aleksandra92.courses.dao.impl.jdbc;
 import com.github.Aleksandra92.courses.beans.Group;
 import com.github.Aleksandra92.courses.beans.Student;
 import com.github.Aleksandra92.courses.dao.StudentDao;
+import com.github.Aleksandra92.courses.dao.impl.jdbc.sql.StudentSql;
 import com.github.Aleksandra92.courses.exceptions.StudentException;
 
 import java.sql.*;
@@ -19,13 +20,8 @@ public class StudentDaoJdbcImpl implements StudentDao {
 
     @Override
     public void saveOrUpdate(Student student) throws StudentException {
-        String insertSql = "INSERT INTO students " +
-                "(first_name, middle_name, last_name, sex, date_of_birth, group_id, education_year)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String updateSql = "UPDATE students SET " +
-                "first_name=?, middle_name=?, last_name=?, " +
-                "sex=?, date_of_birth=?, group_id=?, education_year=? "+
-                "WHERE student_id=?";
+        String insertSql = StudentSql.INSERT_SQL;
+        String updateSql = StudentSql.UPDATE_SQL;
 
         String sql;
         if (student.getId() == null) {
@@ -33,8 +29,11 @@ public class StudentDaoJdbcImpl implements StudentDao {
         } else {
             sql = updateSql;
         }
-        try (Connection con = new ConnectionManager().getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, student.getFirstName());
             stmt.setString(2, student.getMiddleName());
             stmt.setString(3, student.getLastName());
@@ -54,49 +53,64 @@ public class StudentDaoJdbcImpl implements StudentDao {
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to save or update", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
     }
 
     @Override
     public void delete(Long id) throws StudentException {
-        String sql = "DELETE FROM students WHERE student_id=?";
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.DELETE_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.setLong(1, id);
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to delete by id", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
     }
 
     @Override
     public void delete(Student student) throws StudentException {
-        String sql = "DELETE FROM students WHERE student_id=?";
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.DELETE_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.setLong(1, student.getId());
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to delete", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
     }
 
     @Override
     public Student get(Long id) throws StudentException {
-        String sql = "SELECT student_id, first_name, middle_name, last_name, " +
-                "sex, date_of_birth, group_id, education_year FROM students " +
-                "WHERE student_id=?";
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.GET_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return mapStudent(rs);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to get", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
         return null;
     }
@@ -104,30 +118,38 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public List<Student> getAll() throws StudentException {
         List<Student> students = new ArrayList<>();
-        String sql = "SELECT student_id, first_name, middle_name, last_name, " +
-                "sex, date_of_birth, group_id, education_year FROM students " +
-                "ORDER BY last_name, first_name, middle_name";
-
-        try (Connection con = new ConnectionManager().getConnection();
-            Statement stmt = con.createStatement()){
-            ResultSet rs = stmt.executeQuery(sql);
+        String sql = StudentSql.GET_ALL_SQL;
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 students.add(mapStudent(rs));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to getAll", e);
+        } finally {
+            ConnectionManager.close(con, stmt, rs);
         }
         return students;
     }
 
     @Override
     public void deleteAll()throws StudentException {
-        String sql = "TRUNCATE TABLE students";
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.DELETE_ALL_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to deleteAll", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
     }
 
@@ -146,21 +168,22 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public List<Student> getStudentsFromGroup(Group group, int year) throws StudentException {
         List<Student> students = new ArrayList<>();
-        String sql = "SELECT student_id, first_name, middle_name, last_name, " +
-                "sex, date_of_birth, group_id, education_year FROM students " +
-                "WHERE group_id=? AND education_year=? " +
-                "ORDER BY last_name, first_name, middle_name";
-
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.GET_STUDENTS_FROM_GROUP_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.setLong(1, group.getId());
             stmt.setInt(2, year);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 students.add(mapStudent(rs));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to get student from group", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
         return students;
     }
@@ -168,30 +191,39 @@ public class StudentDaoJdbcImpl implements StudentDao {
     @Override
     public void moveStudentsToGroup(Group oldGroup, int oldYear, Group newGroup, int newYear) throws StudentException {
 
-        String sql = "UPDATE students SET group_id=?, education_year=? " +
-                "WHERE group_id=? AND education_year=?";
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.MOVE_STUDENTS_TO_GROUP_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.setLong(1, newGroup.getId());
             stmt.setInt(2, newYear);
             stmt.setLong(3, oldGroup.getId());
             stmt.setInt(4, oldYear);
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to move students to group", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
     }
 
     @Override
     public void removeStudentsFromGroup(Group group, int year) throws StudentException {
-        String sql = "DELETE FROM students WHERE group_id=? AND education_year=?";
-        try (Connection con = new ConnectionManager().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)){
+        String sql = StudentSql.REMOVE_STUDENTS_FROM_GROUP_SQL;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectionManager.getInstance().getConnection();
+            stmt = con.prepareStatement(sql);
             stmt.setLong(1, group.getId());
             stmt.setInt(2, year);
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new StudentException("Unable to remove students from group", e);
+        } finally {
+            ConnectionManager.close(con, stmt);
         }
     }
 
